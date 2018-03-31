@@ -41,17 +41,7 @@ resource "scaleway_server" "k8s-master" {
         "systemctl enable kubelet",
         "systemctl start kubelet",
         "kubeadm init --apiserver-advertise-address=${self.private_ip} --apiserver-cert-extra-sans=${self.public_ip} --pod-network-cidr=10.244.0.0/16",
-    ]
-  }
-
-  provisioner "remote-exec" {
-    inline = [
         "kubectl apply -f /tmp/manifests/flannel.yaml",
-    ]
-  }
-
-  provisioner "remote-exec" {
-    inline = [
         "kubectl apply -f /tmp/manifests/dashboard-rbac.yaml",
         "kubectl apply -f /tmp/manifests/dashboard.yaml",
     ]
