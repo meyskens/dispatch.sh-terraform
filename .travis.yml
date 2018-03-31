@@ -7,7 +7,7 @@ install:
   - sudo mv terraform /usr/local/bin
   - sudo apt-get update && sudo apt-get install jq
 
-post_install:
+before_script:
   - sed -i "s/\${file(\"\/home\/user\/.ssh\/id_rsa\")\}/\$\{var.private_key}/g" master.tf
   - sed -i "s/\${file(\"\/home\/user\/.ssh\/id_rsa\")\}/\$\{var.private_key}/g" node.tf
 
