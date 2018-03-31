@@ -1,5 +1,5 @@
 variable "nodes" {
-    default = 3
+    default = 1
 }
 
 resource "scaleway_ip" "k8s-node-ip" {
