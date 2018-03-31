@@ -1,20 +1,22 @@
 language: bash
 sudo: required
 
+before_install:
+- mkdir $HOME/.ssh
+- openssl aes-256-cbc -K $encrypted_8651ad9a4dfc_key -iv $encrypted_8651ad9a4dfc_iv
+  -in travis_terraform.enc -out $HOME/.ssh/id_rsa -d
+
+
 install:
-  - wget https://releases.hashicorp.com/terraform/0.11.5/terraform_0.11.5_linux_amd64.zip
-  - unzip terraform_0.11.5_linux_amd64.zip
-  - sudo mv terraform /usr/local/bin
-  - sudo apt-get update && sudo apt-get install jq
+- wget https://releases.hashicorp.com/terraform/0.11.5/terraform_0.11.5_linux_amd64.zip
+- unzip terraform_0.11.5_linux_amd64.zip
+- sudo mv terraform /usr/local/bin
+- sudo apt-get update && sudo apt-get install jq
 
 before_script:
-  - sed -i "s/\${file(\"\/home\/user\/.ssh\/id_rsa\")\}/\$\{var.private_key}/g" master.tf
-  - sed -i "s/\${file(\"\/home\/user\/.ssh\/id_rsa\")\}/\$\{var.private_key}/g" node.tf
+- sed -i "s/\${file(\"\/home\/user\/.ssh\/id_rsa\")\}/\${file(\"\/home\/travis\/.ssh\/id_rsa\")\}/g" master.tf
+- sed -i "s/\${file(\"\/home\/user\/.ssh\/id_rsa\")\}/\${file(\"\/home\/travis\/.ssh\/id_rsa\")\}/g" node.tf
 
 script:
-  - terraform init
-  - terraform plan
-
-#after_success:
-#- if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then terraform apply; fi
-
+- terraform init
+- terraform plan
